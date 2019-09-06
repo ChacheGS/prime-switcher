@@ -1,9 +1,10 @@
-import subprocess
 import os
 import re
-import gpu
-from typing import List
+import subprocess
 from typing import Dict
+from typing import List
+
+import gpu
 
 
 def execute_command(cmd) -> str:
@@ -19,6 +20,19 @@ def get_debug_path(path: str) -> str:
 def get_config_filepath(file: str) -> str:
     """Concatenate config folder path and given path"""
     return os.path.join(get_debug_path('configs') if os.getenv('DEBUG', 0) else '/etc/prime-switcher/', file)
+
+
+def get_integrated_driver() -> str:
+    """Get the integrated driver: intel or amdgpu"""
+    drivers = {
+        "amd": "amdpgu",
+        "intel": "intel"
+    }
+    for gpu in get_gpu_list():
+        try:
+            return drivers[gpu.get_brand()]
+        except KeyError:
+            continue
 
 
 def get_gpu_list() -> List[gpu.GPU]:

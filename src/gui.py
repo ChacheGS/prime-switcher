@@ -17,7 +17,7 @@ APPINDICATOR_ID = 'prime-switcher'
 
 
 def reboot(widget, *data):
-    """GTK Event (On click on reboot button in success notificatiob)
+    """GTK Event (On click on reboot button in success notification)
 
     Reboot the system
     """
@@ -52,7 +52,7 @@ def open_gui(switcher: switchers.Switcher):
     success_notify = Notify.Notification.new(_("Reboot required"), _("Reboot is required to apply modifications"))
     success_notify.add_action('reboot', _('Reboot now'), reboot, None, None)
 
-    error_notify = Notify.Notification.new(_("Error"), _("An error as occurred."), "error")
+    error_notify = Notify.Notification.new(_("Error"), _("An error has occurred."), "error")
 
     # Notifications Declaration END
 

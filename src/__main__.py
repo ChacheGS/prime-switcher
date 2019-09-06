@@ -12,7 +12,7 @@ def detect_driver() -> str:
     """Detect the best driver installed on the system and return its name"""
     gpu_list = utils.get_gpu_list()
     driver = 'free'
-    if gpu_list[0].get_brand() == 'intel' and gpu_list[1].get_brand() == 'nvidia':
+    if any(map(lambda g: g.get_brand() == "nvidia", utils.get_gpu_list())):
         non_free_driver = os.path.exists('/usr/bin/nvidia-modprobe')
         driver = 'nvidia' if non_free_driver else 'nouveau'
         if gpu_list[1].has_screen():
@@ -82,4 +82,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

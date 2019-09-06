@@ -1,7 +1,7 @@
 import os
 import re
-
 from abc import ABC, abstractmethod
+
 import utils
 
 modprobe_file = '/etc/modprobe.d/prime-switcher.conf'
@@ -21,6 +21,7 @@ class Switcher(ABC):
         """
         super().__init__()
         self.__dirname__ = dirname
+        self.__integrated_driver = utils.get_integrated_driver()
 
     @abstractmethod
     def get_icon(self) -> str:
@@ -74,12 +75,14 @@ class Switcher(ABC):
         """
         gpu_list = utils.get_gpu_list()
         utils.replace_in_file(src, dst, {"<embedded-gpu>": gpu_list[0].get_pci_id(),
-                                         "<dedicated-gpu>": gpu_list[1].get_pci_id()})
+                                         "<dedicated-gpu>": gpu_list[1].get_pci_id(),
+                                         "<embedded-driver>": utils.get_integrated_driver()})
 
     def uninstall(self) -> None:
         """
         Remove config files of current switcher
         """
+        pass
 
     def get_display_manager_hook_file_path(self) -> str:
         """
@@ -116,8 +119,8 @@ class Switcher(ABC):
             # LightDM
             if os.path.exists(lightdm_file):
                 utils.replace_in_file(lightdm_file, lightdm_file,
-                                      {(
-                                               'display-setup-script=' + self.get_display_manager_hook_file_path()): '#display-setup-script='})
+                                      {('display-setup-script=' + self.get_display_manager_hook_file_path()):
+                                           '#display-setup-script='})
             # SDDM
             if os.path.exists(sddm_file):
                 utils.remove_line_in_file(sddm_file, self.get_display_manager_hook_file_path())

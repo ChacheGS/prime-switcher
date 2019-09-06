@@ -1,6 +1,6 @@
 #!/bin/bash
 
-find locales -name \*.po -execdir msgfmt prime-switcher.po -o prime-switcher.mo
+find locales -name \*.po -execdir msgfmt prime-switcher.po -o prime-switcher.mo \;
 
 mkdir -p /etc/prime-switcher/
 mkdir -p /usr/lib/prime-switcher/
@@ -12,7 +12,7 @@ cp src/* /usr/lib/prime-switcher/
 cp -r icons/* /usr/share/icons/hicolor/
 cp prime-switcher.desktop /etc/xdg/autostart/
 
-ln -s /usr/lib/prime-switcher/__main__.py /usr/bin/prime-switcher
+[ -x /usr/bin/prime-switcher ] || ln -s /usr/lib/prime-switcher/__main__.py /usr/bin/prime-switcher
 
 cd locales
 find . -name '*.mo' -exec cp --parents \{\} /usr/share/locale/ \;
